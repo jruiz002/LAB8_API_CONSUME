@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             API_EXERCISETheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RecipeScreen(modifier = Modifier.padding(innerPadding))
+                    CategoryScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
