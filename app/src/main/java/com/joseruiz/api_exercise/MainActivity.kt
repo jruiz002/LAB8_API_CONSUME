@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.joseruiz.api_exercise.ui.theme.API_EXERCISETheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +23,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             API_EXERCISETheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CategoryScreen(modifier = Modifier.padding(innerPadding))
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "category") {
+                        composable(route = "category"){
+                            CategoryScreen(modifier = Modifier.padding(innerPadding), navController)
+                        }
+                        composable(route = "meal/{categoryName}") { backStackEntry ->
+                            val categoryName = backStackEntry.arguments?.getString("categoryName")
+                            MealScreen(categoryName = categoryName, navController = navController)
+                        }
+                        composable(route = "recipe/{idMeal}") { backStackEntry ->
+                            val idMeal = backStackEntry.arguments?.getString("idMeal")
+                            RecipeScreen(idMeal = idMeal)
+                        }
+                    }
                 }
             }
         }

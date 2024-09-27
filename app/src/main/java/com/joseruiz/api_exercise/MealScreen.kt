@@ -25,58 +25,59 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun CategoryScreen(modifier: Modifier = Modifier, navController: NavController){
-    // Se inicializa el componente
-    val categoryViewModel: MainViewModel = viewModel()
-    val viewstate by categoryViewModel.categoriesState
+fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navController: NavController) {
+    val mealViewModel: MainViewModel = viewModel()
 
-    Box(modifier = Modifier.fillMaxSize()){
-        when{
+    // Llama a fetchMeals si categoryName no es nulo
+    if (categoryName != null) {
+        mealViewModel.onCategoryClick(categoryName)
+    }
+
+    val viewstate by mealViewModel.mealsState
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        when {
             viewstate.loading -> {
-                CircularProgressIndicator(modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-
-            viewstate.error != null ->{
+            viewstate.error != null -> {
                 Text("ERROR OCURRED")
             }
-
             else -> {
-                CategoryScreen(categories = viewstate.list, navController)
+                MealScreen(meals = viewstate.list, navController)
             }
         }
     }
-
 }
 
 @Composable
-fun CategoryScreen(categories: List<Category>, navController: NavController){
+fun MealScreen(meals: List<Meal>, navController: NavController){ //List<Recipe>
     LazyVerticalGrid(GridCells.Fixed(2), modifier = Modifier.fillMaxSize()) {
-        items(categories){
-                category -> CategoryItem(category = category, navController)
+        items(meals){
+            meal -> MealItem(meal = meal, navController)
         }
     }
 }
 
 @Composable
-fun CategoryItem(category: Category, navController: NavController){
+fun MealItem(meal: Meal, navController: NavController){
     Column (
         modifier = Modifier.padding(8.dp).fillMaxSize()
         , horizontalAlignment = Alignment.CenterHorizontally
     ){
         Image(
-            painter = rememberAsyncImagePainter(category.strCategoryThumb)
+            painter = rememberAsyncImagePainter(meal.strMealThumb)
             , contentDescription = null
             , modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f)
                 .clickable {
-                    // Aquí se debería de mandar a llamar el navController
-                    navController.navigate("meal/${category.strCategory}")
+                    navController.navigate("meal/${meal.idMeal}")
                 }
         )
 
         Text(
-            text = category.strCategory
+            text = meal.strMeal
             , color = Color.Black
             , style = TextStyle(fontWeight = FontWeight.Bold)
             , modifier = Modifier.padding(top=4.dp)
