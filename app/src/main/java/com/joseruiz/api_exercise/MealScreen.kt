@@ -1,5 +1,6 @@
 package com.joseruiz.api_exercise
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -72,7 +73,7 @@ fun MealItem(meal: Meal, navController: NavController){
                 .fillMaxSize()
                 .aspectRatio(1f)
                 .clickable {
-                    navController.navigate("meal/${meal.idMeal}")
+                    navController.navigate("recipe/${meal.idMeal}")
                 }
         )
 

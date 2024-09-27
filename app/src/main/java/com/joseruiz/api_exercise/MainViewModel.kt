@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import android.util.Log
+
 
 class MainViewModel: ViewModel() {
     // Variables para categories
@@ -75,19 +77,24 @@ class MainViewModel: ViewModel() {
         , val error: String? = null
     )
 
-    private fun fetchRecipes(idMeal: String){
+    private fun fetchRecipes(idMeal: String) {
         viewModelScope.launch {
-            try{
-                val response = recipeService.getRecipes(idMeal)
+            try {
+                val response = recipeService.getRecipes(idMeal) // Usa idMeal en vez de "52772"
+                Log.i("IDMEAL*************", response.toString())
+
+                // Aquí asumiendo que solo hay una receta y que estás buscando en meals
+                val meals = response.meals ?: emptyList() // Maneja el caso de null
+
                 _recipeState.value = _recipeState.value.copy(
-                    list = response.recipes,
+                    list = meals, // Asigna la lista de meals a tu estado
                     loading = false,
                     error = null
                 )
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _recipeState.value = _recipeState.value.copy(
-                    loading = false
-                    , error = "Error fetching Meals ${e.message}"
+                    loading = false,
+                    error = "Error fetching Meals: ${e.message}"
                 )
             }
         }
@@ -98,9 +105,9 @@ class MainViewModel: ViewModel() {
     }
 
     data class RecipeState(
-        val loading: Boolean = true
-        , val list: List<Recipe> = emptyList()
-        , val error: String? = null
+        val loading: Boolean = true,
+        val list: List<MealRecipe> = emptyList(), // Cambiado a MealRecipe
+        val error: String? = null
     )
 
 }
