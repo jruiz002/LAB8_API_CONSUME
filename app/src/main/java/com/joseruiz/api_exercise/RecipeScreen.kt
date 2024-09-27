@@ -112,13 +112,10 @@ fun RecipeItem(recipe: MealRecipe) {
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        // Asegúrate de que ingredients no sea nulo
-        recipe.ingredients?.let {
-            it.forEach { ingredient ->
-                Text(text = "${ingredient.name}: ${ingredient.measure}")
-            }
-        } ?: run {
-            Text(text = "No ingredients available.")
+        // Usar la función para obtener la lista de ingredientes
+        val ingredients = recipe.toIngredientList()
+        ingredients.forEach { ingredient ->
+            Text(text = "${ingredient.name}: ${ingredient.measure}")
         }
     }
 }
